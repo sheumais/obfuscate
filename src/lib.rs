@@ -1,58 +1,34 @@
-use std::{fs, io};
 use std::io::Write;
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 
-fn create_export_file() -> io::Result<File> {
-    let mut file = File::create("export.txt")?;
-    file.write_all(&[0xFE, 0xFF])?;
-    Ok(file)
+pub fn create_export_file(path: &str) -> File {
+    let mut file = File::create(path).ok().unwrap();
+    file.write_all(&[0xFE, 0xFF]).ok();
+    file
 }
 
-fn write_obfuscation(mut file: fs::File, contents: String) {
-    file.write_all(&contents.as_bytes()).ok();}
-
-pub fn get_string() {
-       loop {
-
-        println!("Please enter your string");
-
-        let mut stringo = String::new();
-
-        io::stdin()
-            .read_line(&mut stringo)
-            .expect("Failed to read string");
-
-        let stringo: String = match stringo.trim().parse::<String>() {
-            Ok(str) => str,
-            Err(_) => continue,
+pub fn write_to_export_file(path: &str, data: &str) {
+    let mut file = match OpenOptions::new()
+        .append(true)
+        .open(path){
+            Ok(f) => f,
+            Err(_) => create_export_file(path),
         };
-        let file = create_export_file().unwrap();
-        write_obfuscation(file, stringo);
-        println!("Successfully exported obfuscated string to export.txt");
-        break;
+    file.write_all(data.as_bytes()).expect("Unable to write data");
+}
+
+pub fn check_commands(s: &str) -> Commands {
+    match s.trim() {
+        "quit" => Commands::Quit,
+        "create" => Commands::Create,
+        "help" => Commands::Help,
+        _ => Commands::Write,
     }
 }
 
-pub fn get_file() {
-    loop {
-        println!("Please enter the file name");
-        let mut file_name = String::new();
-        io::stdin()
-            .read_line(&mut file_name)
-            .expect("Failed to read file name");
-        let file_name: String = match file_name.trim().parse::<String>() {
-            Ok(str) => str,
-            Err(_) => continue,
-        };
-        let contents = fs::read_to_string(&file_name);
-        let _contents = match contents {
-            Ok(contents) => {
-                let file = create_export_file().unwrap();
-                write_obfuscation(file, contents);
-                println!("Successfully exported obfuscated file to export.txt");
-                break;
-            }
-            Err(error) => println!("Problem reading the file: {:?}", error),
-        };
-    }
+pub enum Commands{
+    Quit,
+    Write,
+    Create,
+    Help
 }
