@@ -1,27 +1,62 @@
 use std::io;
-use obfuscate::{get_string, get_file};
+use obfuscate::{create_export_file, check_commands, write_to_export_file, Commands};
 
 fn main() {
 
-    println!("'file' or 'string'");
+    
+    println!(
+        "\
+.___________________________________________________________________.\n\
+|                                                                   |\n\
+|                                                                   |\n\
+|                             Obfuscate                             |\n\
+|                                                                   |\n\
+|                                                                   |\n\
+|           'quit'            'create'            'help'            |\n\
+|         the program     a new empty file    display commands      |\n\
+|___________________________________________________________________|\n\
+|                                                                   |\n\
+|             Type below to append the text to the file             |\n\
+|___________________________________________________________________|\n\
+"
+    );
 
     loop {
 
-        let mut file_or_string = String::new();
+        let path: &str = "export.txt";
+
+        let mut content: String = String::new();
 
         io::stdin()
-            .read_line(&mut file_or_string)
-            .expect("Failed to read line");
+            .read_line(&mut content)
+            .expect("Failed to read string");
 
-        let file_or_string: String = match file_or_string.trim().parse(){
-            Ok(str) => str,
-            Err(_) => continue,
+        match check_commands(&content){
+            Commands::Quit => break,
+            Commands::Create => {
+                create_export_file(path);
+            },
+            Commands::Write => {
+                write_to_export_file(path, &content);
+            },
+            Commands::Help => {
+                println!(
+                    "\
+.___________________________________________________________________.\n\
+|                                                                   |\n\
+|                                                                   |\n\
+|                             Obfuscate                             |\n\
+|                                                                   |\n\
+|                                                                   |\n\
+|           'quit'            'create'            'help'            |\n\
+|         the program     a new empty file    display commands      |\n\
+|___________________________________________________________________|\n\
+|                                                                   |\n\
+|             Type below to append the text to the file             |\n\
+|___________________________________________________________________|\n\
+                    "
+                );
+            },
         };
-
-        match file_or_string.as_str() {
-            "file" => {get_file(); break;}
-            "string" => {get_string(); break;}
-            _ => println!("try again"),
-        }
     }
 }
