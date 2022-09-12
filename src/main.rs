@@ -10,7 +10,7 @@ fn main() {
 |                                                                   |\n\
 |                                                                   |\n\
 |                             Obfuscate                             |\n\
-|                                                                   |\n\
+|               https://github.com/Sheumais/obfuscate               |\n\
 |                                                                   |\n\
 |           'quit'            'create'            'help'            |\n\
 |         the program     a new empty file    display commands      |\n\
@@ -46,7 +46,7 @@ fn main() {
 |                                                                   |\n\
 |                                                                   |\n\
 |                             Obfuscate                             |\n\
-|                                                                   |\n\
+|               https://github.com/Sheumais/obfuscate               |\n\
 |                                                                   |\n\
 |           'quit'            'create'            'help'            |\n\
 |         the program     a new empty file    display commands      |\n\
